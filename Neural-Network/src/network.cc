@@ -200,6 +200,7 @@ int main()
     dataHandler->TRAIN_SET_PERCENT = .9;
 #endif
     dataHandler->splitData();
+    printf("Done split data.\n");
     std::vector<int> hiddenLayers = {10};
     auto lambda = [&]() {
         Network *net = new Network(

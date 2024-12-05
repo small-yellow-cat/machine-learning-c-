@@ -168,6 +168,7 @@ int test_size=dataArray->size()*TEST_SET_PERCENT;    //modified 0.1
 int valid_size=dataArray->size()*VALID_SET_PERCENT;  //modified 0.1
 //validation data
 int count=0; 
+srand(time(NULL));
 while(count<valid_size){
 int rand_index=rand()%used_indexes.size();
 validationData->push_back(dataArray->at(rand_index)); 

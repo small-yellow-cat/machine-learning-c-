@@ -9,7 +9,8 @@
 #include <map>
 #include <unordered_set>
 #include <math.h>
-
+#include <cstdlib>
+#include <ctime>
 class DataHandler
 {
   std::vector<Data *> *dataArray; // all of the data

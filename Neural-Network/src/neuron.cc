@@ -1,4 +1,4 @@
-#include "neuron.hpp"
+#include "../include/neuron.hpp"
 #include <random>
 
 double generateRandomNumber(double min, double max)
@@ -16,9 +16,15 @@ Neuron::Neuron(int previousLayerSize, int currentLayerSize)
 void Neuron::initializeWeights(int previousLayerSize)
 {   
     std::default_random_engine generator;
-    std::normal_distribution<double> distribution(0.0, 1.0);
+    const double epsilon = 1e-8;
+    std::uniform_real_distribution<double> distribution(-1.0, 1.0);
+    //std::normal_distribution<double> distribution(-1.0, 1.0);
     for(int i = 0; i < previousLayerSize + 1; i++)
-    {
-        weights.push_back(generateRandomNumber(-1.0, 1.0));
+    {   double weig=distribution(generator);
+        if (weig == 0.0) { weig = epsilon; 
+        } 
+        else if (weig > -epsilon && weig < epsilon) { weig = (weig > 0) ? epsilon : -epsilon; }
+        weights.push_back(weig);
+        //weights.push_back(generateRandomNumber(-1.0, 1.0));
     }
 }
