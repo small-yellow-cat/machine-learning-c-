@@ -154,40 +154,37 @@ void DataHandler::readLabelData(std::string path)
 //handle and print the data
 void DataHandler::splitData()
 {
-  std::unordered_set<int> used_indexes;
-  int train_size = dataArray->size() * TRAIN_SET_PERCENT;
-  int test_size = dataArray->size() * TEST_SET_PERCENT;
-  int valid_size = dataArray->size() * VALID_SET_PERCENT;
-  
-  //random_shuffle to shuffle
-  std::random_shuffle(dataArray->begin(), dataArray->end());
+  //std::unordered_set<int> used_indexes; 
+std::vector<int> used_indexes;
+for(int i=0; i<dataArray->size(); i++) {used_indexes.push_back(i+1);}
+int train_size=dataArray->size()*TRAIN_SET_PERCENT;   //modified 0.1
+int test_size=dataArray->size()*TEST_SET_PERCENT;    //modified 0.1
+int valid_size=dataArray->size()*VALID_SET_PERCENT;  //modified 0.1
+//validation data
+int count=0; 
+while(count<valid_size){
+int rand_index=rand()%used_indexes.size();
+validationData->push_back(dataArray->at(rand_index)); 
+used_indexes.erase(used_indexes.begin()+rand_index); count++; }
+printf("%d .\n",count);
 
-  // Training Data
+//test data
+ count=0; 
+while(count<test_size){
+int rand_index=rand()%used_indexes.size();
+testData->push_back(dataArray->at(rand_index)); 
+used_indexes.erase(used_indexes.begin()+rand_index); count++; }
+printf("%d .\n",count);
 
-  int count = 0;
-  int index = 0;
-  while(count < train_size)
-  {
-    trainingData->push_back(dataArray->at(index++));
-    count++;
-  }
+//train data
+count=0; 
+while(count<train_size){
+int rand_index=rand()%used_indexes.size();
+trainingData->push_back(dataArray->at(rand_index)); 
+used_indexes.erase(used_indexes.begin()+rand_index); count++; }
+printf("%d .\n",count);
 
-  // Test Data
-  count = 0;
-  while(count < test_size)
-  {
-    testData->push_back(dataArray->at(index++));
-    count++;
-  }
-
-  // Test Data
-
-  count = 0;
-  while(count < valid_size)
-  {
-    validationData->push_back(dataArray->at(index++));
-    count++;
-  }
+ 
 
   printf("Training Data Size: %lu.\n", trainingData->size());
   printf("Test Data Size: %lu.\n", testData->size());
