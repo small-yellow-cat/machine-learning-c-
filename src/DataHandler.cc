@@ -31,7 +31,9 @@ void DataHandler::readCsv(std::string path, std::string delimiter)
   {
     if(line.length() == 0) continue;
     Data *d = new Data();
+    
     d->setNormalizedFeatureVector(new std::vector<double>());
+
     size_t position = 0;
     std::string token;
     while((position = line.find(delimiter)) != std::string::npos)
@@ -52,12 +54,17 @@ void DataHandler::readCsv(std::string path, std::string delimiter)
     }
     dataArray->push_back(d);
   }
-  for(Data *data : *dataArray)
-    data->setClassVector(class_counts);;
-    //begin normalize
-    normalize();
-  //
+  printf("Done getting file header.\n");
   featureVectorSize = dataArray->at(0)->getNormalizedFeatureVector()->size();
+  printf("Done getting file header.\n");
+  //for(Data *data : *dataArray)
+    //data->setClassVector(class_counts);
+    //begin normalize
+   normalize(1);
+  //
+  
+  
+  
 }
 
 void DataHandler::readInputData(std::string path)
@@ -84,7 +91,6 @@ void DataHandler::readInputData(std::string path)
       for(int j=0; j<image_size; j++){
             if(fread(element, sizeof(element), 1, f)){
                 d->appendToFeatureVector(element[0]);
-                //printf("%d %d \n",j, element[0]);
             }else
             {printf("Error reading from data %d \n", j); exit(1); }
         }
@@ -229,11 +235,9 @@ void DataHandler::normalize()
     mins.push_back(val);
     maxs.push_back(val);
   }
-//printf("step 1");
   for(int i = 1; i < dataArray->size(); i++)
   {
     d = dataArray->at(i);
-    //if (i%1000 == 0) printf("step 2");
     for(int j = 0; j < d->getFeatureVectorSize(); j++)
     {
       double value = (double) d->getFeatureVector()->at(j);
@@ -241,13 +245,11 @@ void DataHandler::normalize()
       if(value > maxs.at(j)) maxs[j] = value;
     }
   }
+ 
   // normalize data array
-  //for(int j=0; j<mins.size(); j++) printf("%d %f %f", j, mins.at(j), maxs.at(j));
   for(int i = 0; i < dataArray->size(); i++)
   {
     dataArray->at(i)->setNormalizedFeatureVector(new std::vector<double>());
-    //dataArray->at(i)->setClassVector(class_counts);
-    //if (i%100 == 0) printf("step 3");
     for(int j = 0; j < dataArray->at(i)->getFeatureVectorSize(); j++)
     {
       if(maxs[j] - mins[j] == 0) dataArray->at(i)->appendToFeatureVector(0.0);
@@ -257,6 +259,57 @@ void DataHandler::normalize()
     }
   }
 }
+
+//normalize for feature vector of double variables
+void DataHandler::normalize(int)
+{
+  std::vector<double> mins, maxs;
+  // fill min and max lists
+  
+  Data *d = dataArray->at(0);
+  for(auto val : *d->getNormalizedFeatureVector())
+  {
+    mins.push_back(val);
+    maxs.push_back(val);
+  }
+  //printf("begin normalization.\n");
+  for(int i = 1; i < dataArray->size(); i++)
+  {
+    d = dataArray->at(i);
+    
+    for(int j = 0; j < featureVectorSize; j++)
+    {
+      double value = (double) d->getNormalizedFeatureVector()->at(j);
+      if(value < mins.at(j)) mins[j] = value;
+      if(value > maxs.at(j)) maxs[j] = value;
+    }
+  }
+   //printf("pay attention.\n");
+  // normalize data array
+  std::vector<double>* temp=new std::vector<double>(featureVectorSize);
+  printf("%d .\n", featureVectorSize);
+  for(int i = 0; i < dataArray->size(); i++)
+  { 
+    for(int j = 0; j < featureVectorSize; j++)
+    {
+      if(maxs[j] - mins[j] == 0) { temp->at(j)=0.0;  
+      }
+      else
+        {temp->at(j)=(double)(dataArray->at(i)->getNormalizedFeatureVector()->at(j) - mins[j])/(maxs[j]-mins[j]);
+         
+        }
+        
+
+    }
+    dataArray->at(i)->setNormalizedFeatureVector(temp);
+    
+    
+
+  }
+  delete temp;
+}
+
+
 
 void DataHandler::print()
 {

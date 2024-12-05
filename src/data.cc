@@ -3,13 +3,14 @@
 //...................
 //set feature vector or normalized feature vector
 void Data::setFeatureVector(std::vector<uint8_t>* vect)
-{
-  featureVector = vect;
+{ if( vect ->size()==0) featureVector = vect;
+  else *featureVector=*vect;
+  
 }
 
 void Data::setNormalizedFeatureVector(std::vector<double>* vect)
-{
-  normalizedFeatureVector = vect;
+{ if( vect ->size()==0) normalizedFeatureVector = vect;
+  else *normalizedFeatureVector=*vect;
 }
 
 //.............

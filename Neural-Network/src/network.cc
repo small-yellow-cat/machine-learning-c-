@@ -194,6 +194,10 @@ int main()
     dataHandler->normalize();
 #else
     dataHandler->readCsv("../data/iris.data", ",");
+     printf("Done getting file header.\n");
+    //revised try
+    dataHandler->countClasses();
+    dataHandler->TRAIN_SET_PERCENT = .9;
 #endif
     dataHandler->splitData();
     std::vector<int> hiddenLayers = {10};
@@ -206,7 +210,7 @@ int main()
         net->setTrainingData(dataHandler->getTrainingData());
         net->setTestData(dataHandler->getTestData());
         net->setValidationData(dataHandler->getValidationData());
-        net->train(15);
+        net->train(30);
         //the validation is the same as test here
         net->validate();
         printf("Test Performance: %.3f\n", net->test());

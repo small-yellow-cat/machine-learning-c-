@@ -22,9 +22,10 @@ class DataHandler
   std::map<std::string, int> classFromString; //string type label->
 
   public:
-  const double TRAIN_SET_PERCENT = .1;
-  const double TEST_SET_PERCENT = .075;
-  const double VALID_SET_PERCENT = 0.005;
+  //modify 
+  double TRAIN_SET_PERCENT = .1;
+  double TEST_SET_PERCENT = .075;
+  double VALID_SET_PERCENT = 0.005;
   //construction and destruction function
 
   DataHandler();
@@ -39,6 +40,7 @@ class DataHandler
   void splitData();
   void countClasses();
   void normalize();
+  void normalize(int);
   void print();
 
   //get the size  and number of class

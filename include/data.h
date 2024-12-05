@@ -42,7 +42,7 @@ class Data
   void setDistance(double);
   double getDistance();
 
-  
+  //
 
   
 
